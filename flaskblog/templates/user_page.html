@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+    </div>
+{% for post in posts.items %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata" style="padding-bottom: 10px;">
+            <img class="rounded-circle article-img" style="width: 32px; height: 32px;" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+            <a class="mr-0" href="{{ url_for('user_page', username=post.user_name) }}">{{ post.user_name }}</a>
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d в %H.%M') }}</small>
+        </div>
+        <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+        <p class="article-content emojinied">{{ post.content }}</p>
+
+    </div>
+</article>
+{% endfor %}
+{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+        {% if posts.page == page_num %}
+            <a class="btn btn-primary mb-4 rounded-sm" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+            <a class="btn btn-outline-primary mb-4 rounded-sm" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+{% else %}
+        ...
+    {% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block sidebar %}
+<div class="list-group">
+  <a href="#" class="list-group-item list-group-item-action active">
+    Общее
+  </a>
+  <a href="#" class="list-group-item list-group-item-action">Безопасность</a>
+  <a href="#" class="list-group-item list-group-item-action">Приватность</a>
+</div>
+{% endblock %}
